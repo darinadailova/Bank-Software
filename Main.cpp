@@ -10,7 +10,7 @@ class Account
 	std::string m_currentLine;
 
 public:
-	double balance;
+	double m_balance;
 	void startMenu();
 	void login();
 	void Register();
@@ -18,7 +18,7 @@ public:
 	void cancelAccount();
 	void deposit();
 	void changeBalance();
-	//void deleteAccount();
+	void deleteAccount();
 };
 
 void Account::startMenu() {
@@ -87,7 +87,7 @@ void Account::login()
 				m_currentLine = line;
 				std::cout << "Login was successful\n";
 				std::string temp = line.substr(find2 + 1, line.size());
-				balance = stod(temp);
+				m_balance = stod(temp);
 				flag = true;
 				break;
 			}
@@ -108,7 +108,7 @@ void Account::Register() {
 	std::cin >> m_username;
 	std::cout << "Please enter password: \n";
 	std::cin >> m_password;
-	balance = 0;
+	m_balance = 0;
 }
 
 void Account::quit() {
@@ -121,8 +121,9 @@ void Account::cancelAccount() {
 	std::cout << "Please enter your password: \n";
 	std::string temp;
 	std::cin >> temp;
-	if (temp == m_password && balance == 0) {
-	//	deleteAccount();
+
+	if (temp == m_password && m_balance == 0) {
+		deleteAccount();
 		startMenu();
 	}
 }
@@ -132,8 +133,8 @@ void Account::deposit() {
 	std::cout << "Please enter amount: \n";
 	double amount;
 	std::cin >> amount;
-	balance += amount;
-	std::cout << "You now have " << balance << " BGN\n";
+	m_balance += amount;
+	std::cout << "You now have " << m_balance << " BGN\n";
 	changeBalance();
 }
 
@@ -144,7 +145,7 @@ void Account::changeBalance() {
 	std::string line;
 	while (file >> line) {
 		if (line == m_currentLine) {
-			tempFile << m_username << ':' << m_password << ':' << balance << '\n';
+			tempFile << m_username << ':' << m_password << ':' << m_balance << '\n';
 		}
 		else {
 			tempFile << line << '\n';
@@ -156,7 +157,7 @@ void Account::changeBalance() {
 	std::remove("users.txt");
 	std::rename("temp.txt", "users.txt");
 }
-/*
+
 void Account::deleteAccount() {
 
 	std::ifstream file("users.txt");
@@ -172,7 +173,9 @@ void Account::deleteAccount() {
 
 	std::remove("users.txt");
 	std::rename("temp.txt", "users.txt");
-}*/
+
+	startMenu();
+}
 
 void intro() {
 
@@ -195,7 +198,7 @@ int main() {
 		system("cls");
 		std::cout << "=================================\n";
 		std::cout << "\t   MAIN MENU\n\n";
-		std::cout << "You have " << account.balance << " BGN. Choose one of the following options:\n\n";
+		std::cout << "You have " << account.m_balance << " BGN. Choose one of the following options:\n\n";
 		std::cout << "C - cancel account\n\n";
 		std::cout << "D - deposit\n\n";
 		std::cout << "L - logout\n\n";
