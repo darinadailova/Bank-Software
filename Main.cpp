@@ -2,6 +2,7 @@
 #include<fstream>
 #include<string>
 #include <cstdio>
+#include<cctype>
 
 class Account
 {
@@ -19,7 +20,73 @@ public:
 	void deposit();
 	void changeBalance();
 	void deleteAccount();
+	void createAccount();
+	void mainMenu();
+	void withdraw();
 };
+
+void intro() {
+
+	std::cout << "=================================\n";
+	std::cout << "\t     BANKING\n\n";
+	std::cout << "\t    SOFTWARE\n\n";
+	std::cout << "\tMADE BY: Darina Dailova\n\n";
+	std::cout << "=================================\n\n";
+	std::cin.get();
+}
+
+bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string& str) {
+
+	int size = str.size();
+	int count = 0;
+
+	for (int i = 0; i < size; i++) {
+		if (isupper(str[i])) {
+			count++;
+		}
+		if (islower(str[i])) {
+			count++;
+		}
+		if (str[i] > 34 && str[i] < 39) {
+			count++;
+		}
+		if (str[i] == 33 || str[i] == 64 || str[i] == 94 || str[i] == 42) {
+			count++;
+		}
+	}
+
+	if (count > 2 && size > 4) {
+		return true;
+	}
+
+	return false;
+}
+
+bool usernameAndPasswordValidation(std::string& str) {
+	int strSize = str.size();
+	int count = 0;
+
+	for (int i = 0; i < strSize; i++) {
+
+		if ((str[i] > 96 && str[i] < 123) || (str[i] > 64 && str[i] < 91)) {
+			count++;
+		}
+
+		if (str[i] > 34 && str[i] < 39) {
+			count++;
+		}
+
+		if (str[i] == 33 || str[i] == 64 || str[i] == 94 || str[i] == 42) {
+			count++;
+		}
+	}
+
+	if (count == strSize) {
+		return true;
+	}
+
+	return false;
+}
 
 void Account::startMenu() {
 	char choice = 'a';
@@ -43,7 +110,7 @@ void Account::startMenu() {
 			Register();
 			break;
 		case 'Q':
-
+			std::cout << "Thanks for using our bank! Have a nice day!\n";
 			break;
 		default:
 			std::cout << "\n\n\nPlease select L, R or Q\n";
@@ -63,9 +130,11 @@ void Account::login()
 	}
 
 	if (file.is_open()) {
+
 		std::string username;
 		std::string password;
 		std::string line;
+
 		std::cout << "Please enter username:\n";
 		std::cin >> username;
 		std::cout << "Please enter password:\n";
@@ -74,16 +143,17 @@ void Account::login()
 
 		while (std::getline(file, line)) {
 			int find1 = line.find(':');
-			int find2;
+			int find2 = -1;
 			for (int i = find1; i < line.size(); i++) {
 				if (line[i] == ':') {
 					find2 = i;
 				}
 			}
 
-			if (username == line.substr(0, find1) && password == line.substr(find1 + 1, ((find2 - find1) - 1))) {
+			if (username == line.substr(0, find1) && password == line.substr(find1 + 1, line.size() - find2)) {
+
 				m_username = line.substr(0, find1);
-				m_password = line.substr(find1 + 1, ((find2 - find1) - 1));
+				m_password = line.substr(find1 + 1, line.size() - find2);
 				m_currentLine = line;
 				std::cout << "Login was successful\n";
 				std::string temp = line.substr(find2 + 1, line.size());
@@ -92,10 +162,10 @@ void Account::login()
 				break;
 			}
 		}
+
 		if (!flag) {
 			std::cout << "Wrong username or password. Please try again later!\n";
-			char anyButton;
-			std::cin >> anyButton;
+			system("pause");
 			startMenu();
 		}
 	}
@@ -104,16 +174,51 @@ void Account::login()
 }
 
 void Account::Register() {
+
+	std::cout << "For the username and password you can only use latin lettes and these symbols:  !@#$%^&*\n";
 	std::cout << "Please enter username: \n";
 	std::cin >> m_username;
+
+	while (!usernameAndPasswordValidation(m_username)) {
+		std::cout << "You used incorrect symbol! Please try again: \n";
+		std::cin >> m_username;
+	}
+
 	std::cout << "Please enter password: \n";
+	std::cout << "The password should have 1 uppercase letter, 1 lowercase letter, 1 symbol and it should be at least 5 characters!\n";
 	std::cin >> m_password;
+	while (!usernameAndPasswordValidation(m_password) || !checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(m_password)) {
+		std::cout << "Password is incorrect. Try again: \n";
+		std::cin >> m_password;
+	}
+
 	m_balance = 0;
+	std::cout << "Registration complete!\n";
+	createAccount();
+}
+
+void Account::createAccount() {
+
+	std::ifstream file("users.txt");
+	std::ofstream tempFile("temp.txt");
+	std::string line;
+
+	while (file >> line) {
+		tempFile << line << '\n';
+	}
+
+	tempFile << m_username << ':' << m_password << ':' << m_balance;
+
+	file.close();
+	tempFile.close();
+
+	std::remove("users.txt");
+	int result = std::rename("temp.txt", "users.txt");
 }
 
 void Account::quit() {
-	
-	
+
+
 }
 
 void Account::cancelAccount() {
@@ -132,6 +237,8 @@ void Account::deposit() {
 
 	std::cout << "Please enter amount: \n";
 	double amount;
+
+
 	std::cin >> amount;
 	m_balance += amount;
 	std::cout << "You now have " << m_balance << " BGN\n";
@@ -139,10 +246,11 @@ void Account::deposit() {
 }
 
 void Account::changeBalance() {
-	
+
 	std::ifstream file("users.txt");
 	std::ofstream tempFile("temp.txt");
 	std::string line;
+
 	while (file >> line) {
 		if (line == m_currentLine) {
 			tempFile << m_username << ':' << m_password << ':' << m_balance << '\n';
@@ -177,28 +285,14 @@ void Account::deleteAccount() {
 	startMenu();
 }
 
-void intro() {
-
-	std::cout << "=================================\n";
-	std::cout << "\t     BANKING\n\n";
-	std::cout << "\t    SOFTWARE\n\n";
-	std::cout << "\tMADE BY: Darina Dailova\n\n";
-	std::cout << "=================================\n\n";
-	std::cin.get();
-}
-
-int main() {
-
-	intro();
-	Account account;
-	account.startMenu();
+void Account::mainMenu() {
 	char choice;
 
 	do {
 		system("cls");
 		std::cout << "=================================\n";
 		std::cout << "\t   MAIN MENU\n\n";
-		std::cout << "You have " << account.m_balance << " BGN. Choose one of the following options:\n\n";
+		std::cout << "You have " << m_balance << " BGN. Choose one of the following options:\n\n";
 		std::cout << "C - cancel account\n\n";
 		std::cout << "D - deposit\n\n";
 		std::cout << "L - logout\n\n";
@@ -210,18 +304,22 @@ int main() {
 		switch (choice)
 		{
 		case 'C':
-			account.cancelAccount();
+			cancelAccount();
+			mainMenu();
 			break;
 		case 'D':
-			account.deposit();
+			deposit();
+			mainMenu();
 			break;
 		case 'L':
-			account.startMenu();
+			startMenu();
 			break;
 		case 'T':
+			mainMenu();
 			break;
 		case 'W':
-			
+			withdraw();
+			mainMenu();
 			break;
 		default:
 			std::cout << "\n\n\nPlease select C, D, L, T or W\n";
@@ -229,6 +327,38 @@ int main() {
 		std::cin.ignore();
 		std::cin.get();
 	} while (choice != 'C' && choice != 'D' && choice != 'L' && choice != 'T' && choice != 'W');
+
+}
+
+void Account::withdraw() {
+
+	std::cout << "How much you would like to withdraw?\n";
+	double withdrawAmount;
+	std::cin >> withdrawAmount;
+
+	double divide = m_balance - withdrawAmount;
+	if (divide >= 0) {
+		m_balance = divide;
+		std::cout << "You have " << m_balance << " BGN left.\n";
+		system("pause");
+	}
+	else if (divide < 0 && divide >= -10000) {
+		std::cout << "To withdraw " << withdrawAmount << " BGN. You have to get overdraft of " << withdrawAmount - m_balance << " BGN.\n";
+		m_balance = divide;
+	}
+	else {
+		std::cout << "You can't get that amount! Plase try again later!\n";
+	}
+
+	changeBalance();
+}
+
+int main() {
+
+	intro();
+	Account account;
+	account.startMenu();
+	account.mainMenu();
 
 	return 0;
 }
