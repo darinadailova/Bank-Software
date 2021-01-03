@@ -18,11 +18,10 @@ public:
 	void quit();
 	void cancelAccount();
 	void deposit();
-	void changeBalance();
-	void deleteAccount();
-	void createAccount();
 	void mainMenu();
 	void withdraw();
+	void saveChangesToFile();
+	void deleteAccount();
 };
 
 void intro() {
@@ -111,6 +110,7 @@ void Account::startMenu() {
 			break;
 		case 'Q':
 			std::cout << "Thanks for using our bank! Have a nice day!\n";
+			saveChangesToFile();
 			break;
 		default:
 			std::cout << "\n\n\nPlease select L, R or Q\n";
@@ -144,16 +144,15 @@ void Account::login()
 		while (std::getline(file, line)) {
 			int find1 = line.find(':');
 			int find2 = -1;
-			for (int i = find1; i < line.size(); i++) {
+			for (int i = find1 + 1; i < line.size(); i++) {
 				if (line[i] == ':') {
 					find2 = i;
 				}
 			}
-
-			if (username == line.substr(0, find1) && password == line.substr(find1 + 1, line.size() - find2)) {
+			if (username == line.substr(0, find1) && password == line.substr(find1 + 1, find2 - find1 - 1)) {
 
 				m_username = line.substr(0, find1);
-				m_password = line.substr(find1 + 1, line.size() - find2);
+				m_password = line.substr(find1 + 1, find2 - find1 - 1);
 				m_currentLine = line;
 				std::cout << "Login was successful\n";
 				std::string temp = line.substr(find2 + 1, line.size());
@@ -194,26 +193,79 @@ void Account::Register() {
 
 	m_balance = 0;
 	std::cout << "Registration complete!\n";
-	createAccount();
 }
 
-void Account::createAccount() {
+void Account::saveChangesToFile() {
 
 	std::ifstream file("users.txt");
 	std::ofstream tempFile("temp.txt");
 	std::string line;
+	bool flag = false;
 
 	while (file >> line) {
-		tempFile << line << '\n';
+		if (line == m_currentLine) {
+			flag = true;
+			break;
+		}
+	}
+	while (file >> line) {
+		
+		if (flag) {
+			if (line != m_currentLine) {
+				tempFile << line << '\n';
+			}
+			else {
+				tempFile << m_username << ':' << m_password << ':' << m_balance;
+			}
+		}
+		
+		if (!flag) {
+			tempFile << line << '\n';
+		}
 	}
 
-	tempFile << m_username << ':' << m_password << ':' << m_balance;
+	if (!flag) {
+		tempFile << m_username << ':' << m_password << ':' << m_balance;
+	}
 
 	file.close();
 	tempFile.close();
 
 	std::remove("users.txt");
 	int result = std::rename("temp.txt", "users.txt");
+}
+
+void Account::deleteAccount() {
+
+	std::ifstream file("users.txt");
+	std::ofstream tempFile("temp.txt");
+	std::string line;
+	bool flag = false;
+
+	while (file >> line) {
+		if (line == m_currentLine) {
+			flag = true;
+			break;
+		}
+	}
+
+	while (file >> line) {
+		if (flag) {
+			if (line != m_currentLine) {
+				tempFile << line << '\n';
+			}
+		}
+	}
+	
+
+
+	file.close();
+	tempFile.close();
+
+	std::remove("users.txt");
+	std::rename("temp.txt", "users.txt");
+
+	std::cout << "Your account was deleted succesfuly!\n";
 }
 
 void Account::quit() {
@@ -229,7 +281,6 @@ void Account::cancelAccount() {
 
 	if (temp == m_password && m_balance == 0) {
 		deleteAccount();
-		startMenu();
 	}
 }
 
@@ -242,47 +293,6 @@ void Account::deposit() {
 	std::cin >> amount;
 	m_balance += amount;
 	std::cout << "You now have " << m_balance << " BGN\n";
-	changeBalance();
-}
-
-void Account::changeBalance() {
-
-	std::ifstream file("users.txt");
-	std::ofstream tempFile("temp.txt");
-	std::string line;
-
-	while (file >> line) {
-		if (line == m_currentLine) {
-			tempFile << m_username << ':' << m_password << ':' << m_balance << '\n';
-		}
-		else {
-			tempFile << line << '\n';
-		}
-	}
-	file.close();
-	tempFile.close();
-
-	std::remove("users.txt");
-	std::rename("temp.txt", "users.txt");
-}
-
-void Account::deleteAccount() {
-
-	std::ifstream file("users.txt");
-	std::ofstream tempFile("temp.txt");
-	std::string line;
-	while (file >> line) {
-		if (line != m_currentLine) {
-			tempFile << line << '\n';
-		}
-	}
-	file.close();
-	tempFile.close();
-
-	std::remove("users.txt");
-	std::rename("temp.txt", "users.txt");
-
-	startMenu();
 }
 
 void Account::mainMenu() {
@@ -305,7 +315,6 @@ void Account::mainMenu() {
 		{
 		case 'C':
 			cancelAccount();
-			mainMenu();
 			break;
 		case 'D':
 			deposit();
@@ -349,8 +358,6 @@ void Account::withdraw() {
 	else {
 		std::cout << "You can't get that amount! Plase try again later!\n";
 	}
-
-	changeBalance();
 }
 
 int main() {
