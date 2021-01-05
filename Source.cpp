@@ -137,7 +137,7 @@ void Account::startMenu() {
 	else {
 		std::cout << "Thanks for choosing our bank. Have a nice day!\n";
 		saveChangesToFile();
-		system("pause");
+		std::cin.ignore().get();
 		
 	}
 }
@@ -179,7 +179,7 @@ void Account::login()
 			m_balance = stod(temp);
 			flag = true;
 			m_currentLine = line;
-			system("pause");
+			std::cin.ignore().get();
 			mainMenu();
 			break;
 		}
@@ -188,7 +188,7 @@ void Account::login()
 	}
 	if (!flag) {
 		std::cout << "Wrong username or password. Please try again later!\n";
-		system("pause");
+		std::cin.ignore().get();
 		startMenu();
 	}
 }
@@ -222,7 +222,7 @@ void Account::Register() {
 	line.append("0");
 	m_currentLine = line;
 	userInformation.push_back(line);
-	system("pause");
+	std::cin.ignore().get();
 	mainMenu();
 }
 
@@ -235,7 +235,7 @@ void Account::saveChangesToFile() {
 	std::ofstream tempFile("users.txt");
 	if (!tempFile.is_open()) {
 		std::cout << "The changes weren't save. Please try again later\n";
-		system("pause");
+		std::cin.ignore().get();
 	}
 
 	if (tempFile.is_open()) {
@@ -306,7 +306,7 @@ void Account::deposit() {
 	}
 	m_balance += amount;
 	std::cout << "You now have " << m_balance << " BGN\n";
-	system("pause");
+	std::cin.ignore().get();
 }
 
 void Account::withdraw() {
@@ -323,16 +323,16 @@ void Account::withdraw() {
 	if (difference >= 0) {
 		std::cout << "You have " << difference << " BGN left.\n";
 		m_balance = difference;
-		system("pause");
+		std::cin.ignore().get();
 	}
 	else if (difference < 0 && difference >= -10000) {
 		std::cout << "To withdraw " << withdrawAmount << " BGN. You have to get overdraft of " << withdrawAmount - m_balance << " BGN.\n";
 		m_balance = difference;
-		system("pause");
+		std::cin.ignore().get();
 	}
 	else {
 		std::cout << "You can't get that amount!\n";
-		system("pause");
+		std::cin.ignore().get();
 	}
 }
 
@@ -359,7 +359,7 @@ void Account::cancelAccount() {
 				std::ofstream tempFile("users.txt");
 				if (!tempFile.is_open()) {
 					std::cout << "The changes weren't save. Please try again later\n";
-					system("pause");
+					std::cin.ignore().get();
 				}
 
 				if (tempFile.is_open()) {
@@ -378,16 +378,16 @@ void Account::cancelAccount() {
 
 		}
 		std::cout << "Your account was deleted succesfully.\n";
-		system("pause");
+		std::cin.ignore().get();
 	}
 	else if (temp != m_password) {
 		std::cout << "Wrong password!\n";
-		system("pause");
+		std::cin.ignore().get();
 		mainMenu();
 	}
 	else if (temp == m_password && m_balance != 0) {
 		std::cout << "To cancel account you balance should be 0!\n";
-		system("pause");
+		std::cin.ignore().get();
 		mainMenu();
 	}
 }
@@ -409,7 +409,7 @@ void Account::transfer() {
 
 		if (difference < 0) {
 			std::cout << "To transfer " << moneyTotransfer << " BGN. You have to get overdraft of " << moneyTotransfer - m_balance << std::endl;
-			system("pause");
+			std::cin.ignore().get();
 		}
 
 		std::cout << "Please enter the username of recipient:\n";
@@ -428,13 +428,13 @@ void Account::transfer() {
 		}
 		if (!flag) {
 			std::cout << "This account doesn't exists!\n";
-			system("pause");
+			std::cin.ignore().get();
 			mainMenu();
 		}
 	}
 	else {
 		std::cout << "You can't get that amount!\n";
-		system("pause");
+		std::cin.ignore().get();
 	}
 }
 
@@ -466,7 +466,7 @@ void Account::transferMoney(std::string line, int find1, double moneyToTransfer)
 	std::ofstream tempFile("users.txt");
 	if (!tempFile.is_open()) {
 		std::cout << "The changes weren't saved. Please try again later\n";
-		system("pause");
+		std::cin.ignore().get();
 	}
 
 	if (tempFile.is_open()) {
@@ -484,7 +484,7 @@ void Account::transferMoney(std::string line, int find1, double moneyToTransfer)
 			}
 		}
 		std::cout << "Transfer - complete!\n";
-		system("pause");
+		std::cin.ignore().get();
 	}
 
 	tempFile.close();

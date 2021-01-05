@@ -26,10 +26,6 @@ int main() {
 
 	intro();
 	account.startMenu();
-	/*
-	for (int i = 0; i < account.userInformation.size(); i++) {
-		std::cout << account.userInformation[i] << '\n';
-	}*/
 
 	return 0;
 }
