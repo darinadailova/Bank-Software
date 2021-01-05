@@ -114,7 +114,6 @@ void RoundingNumberToTwoDecimalPlaces(double& num) {
 
 void Account::startMenu() {
 
-	system("cls");
 	std::cout << "=================================\n";
 	std::cout << "\t   START MENU\n\n";
 	std::cout << "L - login\n\n";
@@ -127,7 +126,7 @@ void Account::startMenu() {
 	while (choice != 'L' && choice != 'R' && choice != 'Q') {
 		std::cin >> choice;
 	}
-	system("cls");
+
 	if (choice == 'L') {
 		login();
 	}
@@ -255,7 +254,6 @@ void Account::saveChangesToFile() {
 
 void Account::mainMenu() {
 
-	system("cls");
 	std::cout << "=================================\n";
 	std::cout << "\t   MAIN MENU\n\n";
 	std::cout << "You have " << m_balance << " BGN. Choose one of the following options:\n\n";
@@ -272,7 +270,6 @@ void Account::mainMenu() {
 	while (choice != 'C' && choice != 'D' && choice != 'L' && choice != 'T' && choice != 'W') {
 		std::cin >> choice;
 	}
-	system("cls");
 
 	if (choice == 'D') {
 		deposit();
