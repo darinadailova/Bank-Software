@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <string>
 
 class Account
 {
@@ -8,18 +10,21 @@ class Account
 
 public:
 	double m_balance;
+	std::vector<std::string>userInformation;
 	void startMenu();
 	void login();
 	void Register();
-	void cancelAccount();
-	void deposit();
-	void mainMenu();
-	void withdraw();
 	void saveChangesToFile();
-	void deleteAccount();
+	void mainMenu();
+	void deposit();
+	void withdraw();
+	void cancelAccount();
+	void transfer();
+	void transferMoney(std::string line, int find1, double moneyTotransfer);
 };
 
 void intro();
 bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string&);
 bool usernameValidation(std::string&);
 bool passwordValidation(std::string&);
+void RoundingNumberToTwoDecimalPlaces(double&);
