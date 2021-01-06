@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 3
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2020/2021
+*
+* @author Darina Dailova
+* @idnumber 62583
+* @compiler VC
+*
+* <Header file>
+*
+*/
+
 #pragma once
 #include <vector>
 #include <string>
