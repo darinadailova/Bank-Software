@@ -26,11 +26,11 @@ int main() {
 	file.open("users.txt", std::fstream::in);
 
 	if (!file.is_open()) {
-		std::cout << "Please try again later!\n";
+		std::cout << "We are experiencing some technical difficulties. Please try again later!\n";
 	}
 
 	if (file.is_open()) {
-
+		//read all information from the file and store it in vector
 		std::string line;
 		while (std::getline(file, line)) {
 			account.userInformation.push_back(line);

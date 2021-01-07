@@ -35,23 +35,30 @@ bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string&
 
 	int size = str.size();
 	int count = 0;
+	bool upperLetterFlag = false;
+	bool lowerLetterFlag = false;
+	bool symbolFlag = false;
 
 	for (int i = 0; i < size; i++) {
+		//checks for uppercase letters
 		if (isupper(str[i])) {
-			count++;
+			upperLetterFlag = true;
 		}
+		//checks for lowercase letters
 		if (islower(str[i])) {
-			count++;
+			lowerLetterFlag = true;
 		}
-		if (str[i] > 34 && str[i] < 39) {
-			count++;
+		//checks for symbols - #, $, % and &
+		if (str[i] >= '#'  && str[i] <= '&') {
+			symbolFlag = true;
 		}
-		if (str[i] == 33 || str[i] == 64 || str[i] == 94 || str[i] == 42) {
-			count++;
+		
+		if (str[i] == '!' || str[i] == '@' || str[i] == '^' || str[i] == '*') {
+			symbolFlag = true;
 		}
 	}
-
-	if (count > 2 && size > 4) {
+	//the password should be atleast 5 symbols and has to have 1 uppers letter, 1 lower letter and symbol
+	if (upperLetterFlag && lowerLetterFlag && symbolFlag && size > 4) {
 		return true;
 	}
 
@@ -59,24 +66,26 @@ bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string&
 }
 
 bool usernameValidation(std::string& str) {
+
 	int strSize = str.size();
 	int count = 0;
 
 	for (int i = 0; i < strSize; i++) {
-
-		if ((str[i] > 96 && str[i] < 123) || (str[i] > 64 && str[i] < 91)) {
+		//checks  for upper and lowercase letters
+		if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) {
 			count++;
 		}
-
-		if (str[i] > 34 && str[i] < 39) {
+		////checks for symbols - #, $, % and &
+		if (str[i] >= '#' && str[i] <= '&') {
 			count++;
 		}
-
-		if (str[i] == 33 || str[i] == 64 || str[i] == 94 || str[i] == 42) {
+		
+		if (str[i] == '!' || str[i] == '@' || str[i] == '^' || str[i] == '*') {
 			count++;
 		}
 	}
 
+	//checks if string size is equal to the counter so we can see if the input is correct
 	if (count == strSize) {
 		return true;
 	}
@@ -85,23 +94,25 @@ bool usernameValidation(std::string& str) {
 }
 
 bool passwordValidation(std::string& str) {
+
 	int strSize = str.size();
 	int count = 0;
 
 	for (int i = 0; i < strSize; i++) {
 
-		if ((str[i] > 96 && str[i] < 123) || (str[i] > 64 && str[i] < 91)) {
+		//checks  for upper and lowercase letters
+		if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) {
 			count++;
 		}
-
-		if (str[i] > 34 && str[i] < 39) {
+		//checks for symbols - #, $, % and &
+		if (str[i] >= '#' && str[i] <= '&') {
 			count++;
 		}
-
-		if (str[i] == 33 || str[i] == 64 || str[i] == 94 || str[i] == 42) {
+		
+		if (str[i] == '!' || str[i] == '@' || str[i] == '^' || str[i] == '*') {
 			count++;
 		}
-
+		//checks for numbers in the password
 		if (isdigit(str[i])) {
 			count++;
 		}
@@ -117,9 +128,10 @@ bool passwordValidation(std::string& str) {
 void RoundingNumberToTwoDecimalPlaces(double& num) {
 
 	std::string numStr = std::to_string(num);
-	for (int i = 0; i < numStr.size(); i++) {
 
+	for (int i = 0; i < numStr.size(); i++) {
 		if (numStr[i] == '.') {
+
 			std::string temp;
 			temp = numStr.substr(0, i + 3);
 			num = stod(temp);
@@ -128,11 +140,12 @@ void RoundingNumberToTwoDecimalPlaces(double& num) {
 }
 
 std::string hashPassword(std::string& password) {
+
 	int size = password.size();
-	std::vector<char>arr;
+	std::vector<char>arr;//vector to store the hashed password
 
 	for (int i = 0; i < size; i++) {
-
+		//generates a random string that will be used as hashed password
 		if (password[i] > 34 && password[i] < 39) {
 			arr.push_back(password[i] + 6);
 		}
@@ -158,8 +171,9 @@ std::string hashPassword(std::string& password) {
 		}
 
 	}
-
+	//converts char array to string
 	std::string hashedPassword(arr.begin(), arr.end());
+
 	return hashedPassword;
 }
 
@@ -172,8 +186,10 @@ void Account::startMenu() {
 	std::cout << "Q - quit\n\n";
 	std::cout << "=================================\n\n";
 	std::cout << "Please choose an option:\n";
+
 	char choice;
 	std::cin >> choice;
+	
 	while (choice != 'L' && choice != 'R' && choice != 'Q') {
 		std::cin >> choice;
 	}
@@ -187,8 +203,7 @@ void Account::startMenu() {
 	else {
 		std::cout << "Thanks for choosing our bank. Have a nice day!\n";
 		saveChangesToFile();
-		std::cin.ignore().get();
-		
+		std::cin.ignore().get();	
 	}
 }
 
@@ -197,11 +212,11 @@ void Account::login()
 	std::string username;
 	std::string password;
 
-
 	std::cout << "Please enter username:\n";
 	std::cin >> username;
 	std::cout << "Please enter password:\n";
 	std::cin >> password;
+
 	int size = userInformation.size();
 	std::string line;
 	bool flag = false;
@@ -212,7 +227,7 @@ void Account::login()
 		line = userInformation[i];
 		int find1 = line.find(':');
 		int find2;
-
+		//by finding the two ':' we can separate the line in 3 pieces - username, password and balance
 		for (int i = find1 + 1; i < line.size(); i++) {
 			if (line[i] == ':') {
 				find2 = i;
@@ -226,7 +241,7 @@ void Account::login()
 			m_currentLine = line;
 			std::cout << "Login was successful\n";
 			std::string temp = line.substr(find2 + 1, line.size());
-			m_balance = stod(temp);
+			m_balance = stod(temp);//converts string to double
 			flag = true;
 			m_currentLine = line;
 			std::cin.ignore().get();
@@ -236,11 +251,27 @@ void Account::login()
 
 
 	}
+
 	if (!flag) {
 		std::cout << "Wrong username or password. Please try again later!\n";
 		std::cin.ignore().get();
 		startMenu();
 	}
+}
+
+bool Account::isUsernameAvailable(std::string username) {
+
+	int size = userInformation.size();
+	for (int i = 0; i < size; i++) {
+		std::string line = userInformation[i];
+		int find = line.find(':');
+
+		if (username == line.substr(0, find)) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void Account::Register() {
@@ -251,6 +282,11 @@ void Account::Register() {
 
 	while (!usernameValidation(m_username)) {
 		std::cout << "You used incorrect symbol! Please try again: \n";
+		std::cin >> m_username;
+	}
+
+	while (!isUsernameAvailable(m_username)) {
+		std::cout << "That username is already taken please choose new one:\n";
 		std::cin >> m_username;
 	}
 
@@ -265,6 +301,7 @@ void Account::Register() {
 	m_balance = 0;
 	m_password = hashPassword(m_password);
 	std::cout << "Registration complete!\n";
+	//storing the new information in vector
 	std::string line;
 	line.append(m_username);
 	line.append(":");
@@ -278,7 +315,7 @@ void Account::Register() {
 }
 
 void Account::saveChangesToFile() {
-
+	
 	std::ifstream file("users.txt");
 	file.close();
 	std::remove("users.txt");
@@ -290,8 +327,10 @@ void Account::saveChangesToFile() {
 	}
 
 	if (tempFile.is_open()) {
+
 		int size = userInformation.size();
 		for (int i = 0; i < size; i++) {
+
 			if (userInformation[i] != m_currentLine) {
 				tempFile << userInformation[i] << '\n';
 			}
@@ -319,6 +358,7 @@ void Account::mainMenu() {
 
 	char choice;
 	std::cin >> choice;
+
 	while (choice != 'C' && choice != 'D' && choice != 'L' && choice != 'T' && choice != 'W') {
 		std::cin >> choice;
 	}
@@ -364,6 +404,7 @@ void Account::withdraw() {
 	double withdrawAmount;
 	std::cin >> withdrawAmount;
 	RoundingNumberToTwoDecimalPlaces(withdrawAmount);
+
 	while (withdrawAmount < 0) {
 		std::cout << "Please enter positive number\n";
 		std::cin >> withdrawAmount;
@@ -390,7 +431,7 @@ void Account::cancelAccount() {
 	std::cout << "Please enter your password: \n";
 	std::string temp;
 	std::cin >> temp;
-
+	//to cancel account you have to have 0 BGN int the account 
 	if (hashPassword(temp) == m_password && m_balance == 0) {
 
 		int size = userInformation.size();
@@ -435,7 +476,7 @@ void Account::cancelAccount() {
 		mainMenu();
 	}
 	else if (temp == m_password && m_balance != 0) {
-		std::cout << "To cancel account you balance should be 0!\n";
+		std::cout << "To cancel account your balance should be 0!\n";
 		std::cin.ignore().get();
 		mainMenu();
 	}
@@ -514,7 +555,7 @@ void Account::transferMoney(std::string line, int find1, double moneyToTransfer)
 
 	std::ofstream tempFile("users.txt");
 	if (!tempFile.is_open()) {
-		std::cout << "The changes weren't saved. Please try again later\n";
+		std::cout << "The transfer wasn't made. Please try again later\n";
 		std::cin.ignore().get();
 	}
 
