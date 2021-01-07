@@ -43,3 +43,4 @@ bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string&
 bool usernameValidation(std::string&);
 bool passwordValidation(std::string&);
 void RoundingNumberToTwoDecimalPlaces(double&);
+std::string hashPassword(std::string&);

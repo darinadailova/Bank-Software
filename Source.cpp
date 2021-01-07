@@ -127,6 +127,42 @@ void RoundingNumberToTwoDecimalPlaces(double& num) {
 	}
 }
 
+std::string hashPassword(std::string& password) {
+	int size = password.size();
+	std::vector<char>arr;
+
+	for (int i = 0; i < size; i++) {
+
+		if (password[i] > 34 && password[i] < 39) {
+			arr.push_back(password[i] + 6);
+		}
+
+		if (password[i] == 33 || password[i] == 64 || password[i] == 94 || password[i] == 42) {
+			arr.push_back(password[i] + 10);
+		}
+
+		if (password[i] > 96 && password[i] < 110) {
+			arr.push_back(password[i] + 7);
+		}
+
+		if (password[i] > 109 && password[i] < 123) {
+			arr.push_back(password[i] + 4);
+		}
+
+		if (password[i] > 64 && password[i] < 71) {
+			arr.push_back(password[i] + 15);
+		}
+
+		if (password[i] > 70 && password[i] < 91) {
+			arr.push_back(password[i] + 20);
+		}
+
+	}
+
+	std::string hashedPassword(arr.begin(), arr.end());
+	return hashedPassword;
+}
+
 void Account::startMenu() {
 
 	std::cout << "=================================\n";
@@ -183,7 +219,7 @@ void Account::login()
 			}
 		}
 
-		if (username == line.substr(0, find1) && password == line.substr(find1 + 1, (find2 - find1) - 1)) {
+		if (username == line.substr(0, find1) && hashPassword(password) == line.substr(find1 + 1, (find2 - find1) - 1)) {
 
 			m_username = line.substr(0, find1);
 			m_password = line.substr(find1 + 1, find2 - find1 - 1);
@@ -227,6 +263,7 @@ void Account::Register() {
 	}
 
 	m_balance = 0;
+	m_password = hashPassword(m_password);
 	std::cout << "Registration complete!\n";
 	std::string line;
 	line.append(m_username);
@@ -354,7 +391,7 @@ void Account::cancelAccount() {
 	std::string temp;
 	std::cin >> temp;
 
-	if (temp == m_password && m_balance == 0) {
+	if (hashPassword(temp) == m_password && m_balance == 0) {
 
 		int size = userInformation.size();
 		for (int i = 0; i < size; i++) {
