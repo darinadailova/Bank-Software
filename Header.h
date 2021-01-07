@@ -38,6 +38,7 @@ public:
 	void cancelAccount();//function for deleting account
 	void transfer();//function for transfering money from one account to another
 	void transferMoney(std::string line, int find1, double moneyTotransfer);//function to make the transfer
+	void modifyAccount();
 };
 
 void intro();

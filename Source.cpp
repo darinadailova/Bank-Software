@@ -347,19 +347,21 @@ void Account::mainMenu() {
 
 	std::cout << "=================================\n";
 	std::cout << "\t   MAIN MENU\n\n";
+	std::cout << "Welcome to our bank, " << m_username << "! How can we assist you today?\n\n";
 	std::cout << "You have " << m_balance << " BGN. Choose one of the following options:\n\n";
 	std::cout << "C - cancel account\n\n";
 	std::cout << "D - deposit\n\n";
 	std::cout << "L - logout\n\n";
 	std::cout << "T - transfer\n\n";
 	std::cout << "W - withdraw\n\n";
+	std::cout << "M - modify account\n\n";
 	std::cout << "=================================\n\n";
 	std::cout << "Please choose an option:\n";
 
 	char choice;
 	std::cin >> choice;
 
-	while (choice != 'C' && choice != 'D' && choice != 'L' && choice != 'T' && choice != 'W') {
+	while (choice != 'C' && choice != 'D' && choice != 'L' && choice != 'T' && choice != 'W' && choice != 'M') {
 		std::cin >> choice;
 	}
 
@@ -376,6 +378,9 @@ void Account::mainMenu() {
 	}
 	else if (choice == 'L') {
 		startMenu();
+	}
+	else if (choice == 'M') {
+		modifyAccount();
 	}
 	else {
 		transfer();
@@ -498,7 +503,7 @@ void Account::transfer() {
 	if (difference >= -10000) {
 
 		if (difference < 0) {
-			std::cout << "To transfer " << moneyTotransfer << " BGN. You have to get overdraft of " << moneyTotransfer - m_balance << std::endl;
+			std::cout << "To transfer " << moneyTotransfer << " BGN. You have to get overdraft of " << moneyTotransfer - m_balance << " BGN." << std::endl;
 			std::cin.ignore().get();
 		}
 
@@ -578,4 +583,65 @@ void Account::transferMoney(std::string line, int find1, double moneyToTransfer)
 	}
 
 	tempFile.close();
+}
+
+void Account::modifyAccount() {
+
+	std::cout << '\n';
+	std::cout << "What do you want to change?\n";
+	std::cout << "P - password\n";
+	std::cout << "U - username\n";
+	std::cout << "Please select an option:\n";
+
+	char choice;
+	std::cin >> choice;
+	while (choice != 'P' && choice != 'U') {
+		std::cin >> choice;
+	}
+
+	if (choice == 'P') {
+
+		std::cout << "Please enter your password:\n";
+		std::string password;
+		std::cin >> password;
+
+		if (hashPassword(password) == m_password) {
+
+			std::cout << "Please enter your new password:\n";
+			std::string newPassword;
+			std::cin >> newPassword;
+
+			while (!passwordValidation(newPassword) || !checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(newPassword)) {
+				std::cout << "Password is incorrect. Try again: \n";
+				std::cin >> m_password;
+			}
+
+			std::cout << "Your password is updated!\n";
+			m_password = hashPassword(newPassword);
+			saveChangesToFile();
+		}
+		else {
+			std::cout << "Invalid password!\n";
+			std::cin.ignore().get();	
+		}
+	}
+	else {
+		std::cout << "Please enter your new username:\n";
+		std::string newUsername;
+		std::cin >> newUsername;
+
+		while (!usernameValidation(newUsername)) {
+			std::cout << "You used incorrect symbol! Please try again: \n";
+			std::cin >> newUsername;
+		}
+
+		while (!isUsernameAvailable(newUsername)) {
+			std::cout << "That username is already taken please choose new one:\n";
+			std::cin >> newUsername;
+		}
+
+		m_username = newUsername;
+		std::cout << "Your username has been updated!\n";
+		saveChangesToFile();
+	}
 }
