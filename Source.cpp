@@ -170,7 +170,11 @@ std::string hashPassword(std::string& password) {
 			arr.push_back(password[i] + 20);
 		}
 
+		if (password[i] > 47 && password[i] < 58) {
+			arr.push_back(password[i] + 30);
+		}
 	}
+
 	//converts char array to string
 	std::string hashedPassword(arr.begin(), arr.end());
 
