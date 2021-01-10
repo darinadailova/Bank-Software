@@ -24,17 +24,16 @@ int main() {
 	std::ifstream file;
 	file.open("users.txt", std::fstream::in);
 
-	if (! file.is_open()) {
-		std::ofstream file;
-		file.open("users.txt", std::fstream::out);
-	}
-
 	if (file.is_open()) {
 		//read all information from the file and store it in vector
 		std::string line;
 		while (std::getline(file, line)) {
 			account.userInformation.push_back(line);
 		}
+	}
+	else {
+		std::ofstream file;
+		file.open("users.txt", std::fstream::out);
 	}
 
 	file.close();
