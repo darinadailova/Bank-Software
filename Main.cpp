@@ -9,7 +9,7 @@
 * @idnumber 62583
 * @compiler VC
 *
-* <Main file>
+* <File with main function>
 *
 */
 
@@ -19,14 +19,14 @@
 #include <vector>
 
 int main() {
-
 	Account account;
 	
 	std::ifstream file;
 	file.open("users.txt", std::fstream::in);
 
-	if (!file.is_open()) {
-		std::cout << "We are experiencing some technical difficulties. Please try again later!\n";
+	if (! file.is_open()) {
+		std::ofstream file;
+		file.open("users.txt", std::fstream::out);
 	}
 
 	if (file.is_open()) {

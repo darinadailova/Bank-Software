@@ -22,7 +22,6 @@
 #include <vector>
 
 void intro() {
-
 	std::cout << "=================================\n";
 	std::cout << "\t     BANKING\n\n";
 	std::cout << "\t    SOFTWARE\n\n";
@@ -31,9 +30,8 @@ void intro() {
 	std::cin.get();
 }
 
-bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string& str) {
-
-	int size = str.size();
+bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(const std::string& str) {
+	const int size = str.size();
 	int count = 0;
 	bool upperLetterFlag = false;
 	bool lowerLetterFlag = false;
@@ -65,9 +63,8 @@ bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string&
 	return false;
 }
 
-bool usernameValidation(std::string& str) {
-
-	int strSize = str.size();
+bool usernameValidation(const std::string& str) {
+	const int strSize = str.size();
 	int count = 0;
 
 	for (int i = 0; i < strSize; i++) {
@@ -93,9 +90,8 @@ bool usernameValidation(std::string& str) {
 	return false;
 }
 
-bool passwordValidation(std::string& str) {
-
-	int strSize = str.size();
+bool passwordValidation(const std::string& str) {
+	const int strSize = str.size();
 	int count = 0;
 
 	for (int i = 0; i < strSize; i++) {
@@ -126,10 +122,9 @@ bool passwordValidation(std::string& str) {
 }
 
 void RoundingNumberToTwoDecimalPlaces(double& num) {
-
-	std::string numStr = std::to_string(num);
-
-	for (int i = 0; i < numStr.size(); i++) {
+	const std::string numStr = std::to_string(num);
+	const int size = numStr.size();
+	for (int i = 0; i < size; i++) {
 		if (numStr[i] == '.') {
 
 			std::string temp;
@@ -139,9 +134,8 @@ void RoundingNumberToTwoDecimalPlaces(double& num) {
 	}
 }
 
-std::string hashPassword(std::string& password) {
-
-	int size = password.size();
+std::string hashPassword(const std::string& password) {
+	const int size = password.size();
 	std::vector<char>arr;//vector to store the hashed password
 
 	for (int i = 0; i < size; i++) {
@@ -174,7 +168,6 @@ std::string hashPassword(std::string& password) {
 			arr.push_back(password[i] + 30);
 		}
 	}
-
 	//converts char array to string
 	std::string hashedPassword(arr.begin(), arr.end());
 
@@ -182,7 +175,6 @@ std::string hashPassword(std::string& password) {
 }
 
 void Account::startMenu() {
-
 	std::cout << "=================================\n";
 	std::cout << "\t   START MENU\n\n";
 	std::cout << "L - login\n\n";
@@ -211,8 +203,7 @@ void Account::startMenu() {
 	}
 }
 
-void Account::login()
-{
+void Account::login() {
 	std::string username;
 	std::string password;
 
@@ -221,7 +212,7 @@ void Account::login()
 	std::cout << "Please enter password:\n";
 	std::cin >> password;
 
-	int size = userInformation.size();
+	const int size = userInformation.size();
 	std::string line;
 	bool flag = false;
 
@@ -256,16 +247,15 @@ void Account::login()
 
 	}
 
-	if (!flag) {
+	if (! flag) {
 		std::cout << "Wrong username or password. Please try again later!\n";
 		std::cin.ignore().get();
 		startMenu();
 	}
 }
 
-bool Account::isUsernameAvailable(std::string username) {
-
-	int size = userInformation.size();
+bool Account::isUsernameAvailable(const std::string& username) {
+	const int size = userInformation.size();
 	for (int i = 0; i < size; i++) {
 		std::string line = userInformation[i];
 		int find = line.find(':');
@@ -279,17 +269,16 @@ bool Account::isUsernameAvailable(std::string username) {
 }
 
 void Account::Register() {
-
 	std::cout << "For the username and password you can only use latin lettes and these symbols:  !@#$%^&*\n";
 	std::cout << "Please enter username: \n";
 	std::cin >> m_username;
 
-	while (!usernameValidation(m_username)) {
+	while (! usernameValidation(m_username)) {
 		std::cout << "You used incorrect symbol! Please try again: \n";
 		std::cin >> m_username;
 	}
 
-	while (!isUsernameAvailable(m_username)) {
+	while (! isUsernameAvailable(m_username)) {
 		std::cout << "That username is already taken please choose new one:\n";
 		std::cin >> m_username;
 	}
@@ -297,7 +286,7 @@ void Account::Register() {
 	std::cout << "Please enter password: \n";
 	std::cout << "The password should have 1 uppercase letter, 1 lowercase letter, 1 symbol and it should be at least 5 characters!\n";
 	std::cin >> m_password;
-	while (!passwordValidation(m_password) || !checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(m_password)) {
+	while (! passwordValidation(m_password) || ! checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(m_password)) {
 		std::cout << "Password is incorrect. Try again: \n";
 		std::cin >> m_password;
 	}
@@ -319,13 +308,12 @@ void Account::Register() {
 }
 
 void Account::saveChangesToFile() {
-	
 	std::ifstream file("users.txt");
 	file.close();
 	std::remove("users.txt");
 
 	std::ofstream tempFile("users.txt");
-	if (!tempFile.is_open()) {
+	if (! tempFile.is_open()) {
 		std::cout << "The changes weren't save. Please try again later\n";
 		std::cin.ignore().get();
 	}
@@ -348,7 +336,6 @@ void Account::saveChangesToFile() {
 }
 
 void Account::mainMenu() {
-
 	std::cout << "=================================\n";
 	std::cout << "\t   MAIN MENU\n\n";
 	std::cout << "Welcome to our bank, " << m_username << "! How can we assist you today?\n\n";
@@ -392,7 +379,6 @@ void Account::mainMenu() {
 }
 
 void Account::deposit() {
-
 	std::cout << "Please enter amount: \n";
 	double amount;
 	std::cin >> amount;
@@ -408,7 +394,6 @@ void Account::deposit() {
 }
 
 void Account::withdraw() {
-
 	std::cout << "How much you would like to withdraw?\n";
 	double withdrawAmount;
 	std::cin >> withdrawAmount;
@@ -436,7 +421,6 @@ void Account::withdraw() {
 }
 
 void Account::cancelAccount() {
-
 	std::cout << "Please enter your password: \n";
 	std::string temp;
 	std::cin >> temp;
@@ -456,7 +440,7 @@ void Account::cancelAccount() {
 				std::remove("users.txt");
 
 				std::ofstream tempFile("users.txt");
-				if (!tempFile.is_open()) {
+				if (! tempFile.is_open()) {
 					std::cout << "The changes weren't save. Please try again later\n";
 					std::cin.ignore().get();
 				}
@@ -492,7 +476,6 @@ void Account::cancelAccount() {
 }
 
 void Account::transfer() {
-
 	std::cout << "How much money do you want to transfer?\n";
 	double moneyTotransfer;
 	std::cin >> moneyTotransfer;
@@ -525,7 +508,7 @@ void Account::transfer() {
 				break;
 			}
 		}
-		if (!flag) {
+		if (! flag) {
 			std::cout << "This account doesn't exists!\n";
 			std::cin.ignore().get();
 			mainMenu();
@@ -537,17 +520,16 @@ void Account::transfer() {
 	}
 }
 
-void Account::transferMoney(std::string line, int find1, double moneyToTransfer) {
-
+void Account::transferMoney(const std::string& line, const int& find1, const double& moneyToTransfer) {
 	int find2;
 	for (int i = find1 + 1; i < line.size(); i++) {
 		if (line[i] == ':') {
 			find2 = i;
 		}
 	}
-	std::string username = line.substr(0, find1);
-	std::string password = line.substr(find1 + 1, find2 - find1 - 1);
-	std::string balance = line.substr(find2 +1, line.size() - find2);
+	const std::string username = line.substr(0, find1);
+	const std::string password = line.substr(find1 + 1, find2 - find1 - 1);
+	const std::string balance = line.substr(find2 +1, line.size() - find2);
 	double balanceNumber = stod(balance);
 	balanceNumber += moneyToTransfer;
 
@@ -563,7 +545,7 @@ void Account::transferMoney(std::string line, int find1, double moneyToTransfer)
 	std::remove("users.txt");
 
 	std::ofstream tempFile("users.txt");
-	if (!tempFile.is_open()) {
+	if (! tempFile.is_open()) {
 		std::cout << "The transfer wasn't made. Please try again later\n";
 		std::cin.ignore().get();
 	}
@@ -590,7 +572,6 @@ void Account::transferMoney(std::string line, int find1, double moneyToTransfer)
 }
 
 void Account::modifyAccount() {
-
 	std::cout << '\n';
 	std::cout << "What do you want to change?\n";
 	std::cout << "P - password\n";
@@ -634,12 +615,12 @@ void Account::modifyAccount() {
 		std::string newUsername;
 		std::cin >> newUsername;
 
-		while (!usernameValidation(newUsername)) {
+		while (! usernameValidation(newUsername)) {
 			std::cout << "You used incorrect symbol! Please try again: \n";
 			std::cin >> newUsername;
 		}
 
-		while (!isUsernameAvailable(newUsername)) {
+		while (! isUsernameAvailable(newUsername)) {
 			std::cout << "That username is already taken please choose new one:\n";
 			std::cin >> newUsername;
 		}

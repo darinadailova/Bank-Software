@@ -9,7 +9,7 @@
 * @idnumber 62583
 * @compiler VC
 *
-* <Header file>
+* <File with functions declarations>
 *
 */
 
@@ -30,20 +30,20 @@ public:
 	void startMenu();//function to print start menu
 	void login();//function for login
 	void Register();//function for signup
-	bool isUsernameAvailable(std::string);
+	bool isUsernameAvailable(const std::string&);
 	void saveChangesToFile();//function to save the changes we have made
 	void mainMenu();//function to print main menu
 	void deposit();//function for depositing money to account
 	void withdraw();//function for withdrawing money from account
 	void cancelAccount();//function for deleting account
 	void transfer();//function for transfering money from one account to another
-	void transferMoney(std::string line, int find1, double moneyTotransfer);//function to make the transfer
+	void transferMoney(const std::string&, const int&, const double&);//function to make the transfer
 	void modifyAccount();
 };
 
 void intro();
-bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(std::string&);
-bool usernameValidation(std::string&);
-bool passwordValidation(std::string&);
+bool checkForLowerAndUpperLetterSymbolInPasswordAndLenghtOfPassword(const std::string&);
+bool usernameValidation(const std::string&);
+bool passwordValidation(const std::string&);
 void RoundingNumberToTwoDecimalPlaces(double&);
-std::string hashPassword(std::string&);
+std::string hashPassword(const std::string&);
